@@ -3,7 +3,7 @@
 An extension for [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim)
 implementing a source for viewing buffer ctags.
 
-![neo-tree-diagnostics](./docs/sample.png)
+![neo-tree-ctags](./docs/sample.png)
 
 ## Installation
 
@@ -42,3 +42,7 @@ require("neo-tree").setup({
  ```
 Neotree current ctags reveal
  ```
+
+## Respects
+
+* [An extension for neo-tree.nvim implementing a source for viewing workspace diagnostics](https://github.com/mrbjarksen/neo-tree-diagnostics.nvim)
