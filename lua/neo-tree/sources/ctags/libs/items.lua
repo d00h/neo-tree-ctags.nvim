@@ -9,23 +9,40 @@ local function format_item_path(parent, name)
 end
 
 local function split_by_tab(text)
-  local fields = {}
-  for field in text:gmatch("([^\t]+)") do fields[#fields + 1] = field end
-  return fields
+  local start = 1
+  local result = {}
+  for pos = 1, #text do
+    if text:sub(pos, pos) == "\t" and pos > 1 then
+      table.insert(result, text:sub(start, pos - 1))
+      start = pos + 1
+    end
+  end
+  table.insert(result, text:sub(start))
+  return result
 end
 
 local function parse_ctags_outputs(lines)
-
   local result = {}
+  local cache = {}
   for _, line in ipairs(lines) do
     local parsed = split_by_tab(line)
+
+    local shortname = parsed[1]
+    local fullname = format_item_path(parsed[5], parsed[1])
+    local filename = parsed[2]
+    local pattern = parsed[3]
+    local type = parsed[4]
+    local parent_fullname = format_item_path(parsed[5], nil) or ""
+    cache[fullname] = true
+    if not cache[parent_fullname] then parent_fullname = "" end
+
     table.insert(result, {
-      shortname = parsed[1],
-      fullname = format_item_path(parsed[5], parsed[1]),
-      filename = parsed[2],
-      pattern = parsed[3],
-      type = parsed[4],
-      parent_fullname = format_item_path(parsed[5], nil) or "",
+      shortname = shortname,
+      fullname = fullname,
+      filename = filename,
+      pattern = pattern,
+      type = type,
+      parent_fullname = parent_fullname,
     })
   end
   return result
