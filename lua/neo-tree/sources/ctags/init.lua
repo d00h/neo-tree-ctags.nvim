@@ -90,26 +90,6 @@ M.setup = function(config, global_config)
   if global_config.enable_refresh_on_write then
     table.insert(refresh_events, events.VIM_BUFFER_CHANGED)
   end
-
-  --Configure event handlers for modified files
-  if global_config.enable_modified_markers then
-    manager.subscribe(M.name, {
-      event = events.VIM_BUFFER_MODIFIED_SET,
-      handler = wrap(manager.modified_buffers_changed),
-    })
-  end
-
-  -- Configure event handler for follow_current_file option
-  if config.follow_current_file then
-    manager.subscribe(M.name, {
-      event = events.VIM_BUFFER_ENTER,
-      handler = M.follow,
-    })
-    manager.subscribe(M.name, {
-      event = events.VIM_TERMINAL_ENTER,
-      handler = M.follow,
-    })
-  end
 end
 
 return M
