@@ -81,20 +81,6 @@ M.setup = function(config, global_config)
         end
       end,
     })
-  elseif global_config.enable_git_status then
-    manager.subscribe(M.name, {
-      event = events.BEFORE_RENDER,
-      handler = function(state)
-        local this_state = get_state()
-        if state == this_state then
-          state.git_status_lookup = git.status(state.git_base)
-        end
-      end,
-    })
-    manager.subscribe(M.name, {
-      event = events.GIT_EVENT,
-      handler = M.buffers_changed,
-    })
   end
 
   local refresh_events = {
@@ -103,20 +89,6 @@ M.setup = function(config, global_config)
   }
   if global_config.enable_refresh_on_write then
     table.insert(refresh_events, events.VIM_BUFFER_CHANGED)
-  end
-
-  if config.bind_to_cwd then
-    manager.subscribe(M.name, {
-      event = events.VIM_DIR_CHANGED,
-      handler = wrap(manager.dir_changed),
-    })
-  end
-
-  if global_config.enable_diagnostics then
-    manager.subscribe(M.name, {
-      event = events.VIM_DIAGNOSTIC_CHANGED,
-      handler = wrap(manager.diagnostics_changed),
-    })
   end
 
   --Configure event handlers for modified files
